@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eventXpress | Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oleo+Script+Swash+Caps&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+    <div class="auth-card" id="authCard">
+        <div class="text-center">
+            <div class="logo">eventXpress</div>
+            <h4 id="form-title">Welcome Back</h4>
+            <p class="subtitle-text" id="form-subtitle">Access your customer dashboard</p>
+        </div>
+
+        <div class="role-switcher">
+            <button class="role-btn active" id="customerBtn">Customer</button>
+            <button class="role-btn" id="vendorBtn">Vendor</button>
+        </div>
+
+        <!-- <button class="google-btn" type="button">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="google">
+            <span>Continue with Google</span>
+        </button> -->
+
+        <div class="divider">OR USE EMAIL</div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="name@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            
+            <div class="form-footer">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Create one for free</a>
+        </div>
+    </div>
+
+   <script>
+const customerBtn = document.getElementById('customerBtn');
+const vendorBtn = document.getElementById('vendorBtn');
+const authCard = document.getElementById('authCard');
+const formSubtitle = document.getElementById('form-subtitle');
+const submitBtn = document.getElementById('submitBtn');
+const loginForm = document.getElementById('loginForm');
+
+let currentRole = 'customer'; // ✅ FIX lowercase
+
+// Role switching
+vendorBtn.addEventListener('click', () => {
+  currentRole = 'vendor';
+  vendorBtn.classList.add('active');
+  customerBtn.classList.remove('active');
+  authCard.classList.add('vendor-mode');
+
+  formSubtitle.innerText = "Access your vendor workspace";
+  submitBtn.innerText = "Vendor Sign In";
+});
+
+customerBtn.addEventListener('click', () => {
+  currentRole = 'customer';
+  customerBtn.classList.add('active');
+  vendorBtn.classList.remove('active');
+  authCard.classList.remove('vendor-mode');
+
+  formSubtitle.innerText = "Access your customer dashboard";
+  submitBtn.innerText = "Sign In";
+});
+
+// LOGIN
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    submitBtn.innerText = "Authenticating...";
+    submitBtn.disabled = true;
+
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.msg || "Login failed");
+      return;
+    }
+
+    // ✅ Store token
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userName", data.user.name);
+
+    let payload;
+    try {
+      payload = JSON.parse(atob(data.token.split('.')[1]));
+    } catch {
+      alert("Invalid token received");
+      return;
+    }
+
+    // ✅ Role validation (important)
+    if (payload.role !== currentRole) {
+      alert(`You logged in as ${payload.role}, but selected ${currentRole}`);
+    }
+
+    alert("Login successful");
+
+    // ✅ Redirect
+    if (payload.role === "vendor") {
+      window.location.href = "vendor-dashboard.html";
+    } else {
+      window.location.href = "index.html";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  } finally {
+    submitBtn.innerText = currentRole === "vendor" ? "Vendor Sign In" : "Sign In";
+    submitBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

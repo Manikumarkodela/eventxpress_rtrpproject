@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vendor Dashboard | eventXpress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a39f2ce48a.js" crossorigin="anonymous"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar" aria-label="Primary navigation">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="index.html" class="logo">eventXpress</a>
+      </div>
+      <div class="nav-center" id="navCenter">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="vendor-dashboard.html" class="active">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <div class="search-box" role="search">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" placeholder="Search services..." aria-label="Search services">
+        </div>
+        <div id="auth-buttons">
+          <button class="btn-primary login-btn" onclick="window.location.href='login.html'">Login</button>
+        </div>
+
+        <div id="user-menu" class="user-menu" aria-haspopup="true" style="display: none;">
+          <button id="user-trigger" class="user-trigger" aria-expanded="false">
+            <i class="fa-solid fa-circle-user"></i>
+            <span id="user-name">User</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+
+          <div id="user-dropdown" class="user-dropdown">
+          </div>
+        </div>
+
+        <!-- MENU TOGGLE -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="dashboard-header">
+      <h1>Vendor Dashboard</h1>
+      <p>Manage your professional listings and attract more clients.</p>
+    </div>
+
+    <section class="dashboard-grid">
+      <div class="dashboard-panel">
+        <h2>Add a Service</h2>
+        <form id="service-form" class="vendor-form">
+          <label>Service Name</label>
+          <input type="text" id="serviceName" placeholder="Wedding Photography" required>
+
+          <label>Base Price (₹)</label>
+          <input type="number" id="price" placeholder="500" required>
+
+          <label>Description</label>
+          <textarea id="description" rows="3" placeholder="Tell clients about your expertise..." required></textarea>
+
+          <label>Category</label>
+          <select id="category" required
+            style="padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; font-family: inherit; font-size: 1rem; width: 100%; box-sizing: border-box;">
+            <option value="photography">Photography</option>
+            <option value="decoration">Decoration</option>
+            <option value="catering">Catering</option>
+            <option value="planning">Event Planning</option>
+            <option value="venues">Venues</option>
+          </select>
+
+          <label>Contact Details</label>
+          <input type="text" id="contact" placeholder="Phone number or Email for inquiries" required
+            style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">
+
+          <label>Upload Portfolio Images</label>
+          <div class="upload-container" id="drop-zone">
+            <div class="upload-content">
+              <i class="fa-solid fa-images"></i>
+              <p>Drag images here or <span>Browse</span></p>
+            </div>
+            <input type="file" id="file-input" multiple accept="image/*" hidden>
+          </div>
+          <div id="image-preview-grid" class="preview-grid"></div>
+
+          <button type="submit" class="submit-btn">Publish Service</button>
+        </form>
+      </div>
+
+      <div class="dashboard-panel">
+        <h2>Live Listings</h2>
+        <div id="my-services" class="vendor-grid">
+        </div>
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- UNIVERSAL FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <a href="#" class="logo">eventXpress</a>
+        <p>Simplifying the massive chaos of event planning by instantly bridging the gap between top professionals and
+          ready customers.</p>
+        <div class="social-links">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="vendors.html">Vendor Marketplace</a></li>
+          <li><a href="index.html#blog">Blog & Insights</a></li>
+          <li><a href="index.html#events">Popular Events</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Safety Center</a></li>
+          <li><a href="#">Cancellation Policy</a></li>
+          <li><a href="vendor-dashboard.html">Vendor Tools</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact Us</h3>
+        <ul>
+          <li><a href="mailto:hello@eventxpress.com"><i class="fa-regular fa-envelope"></i> hello@eventxpress.com</a>
+          </li>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> +91 98765 43210</a></li>
+          <li><a href="#"><i class="fa-solid fa-location-dot"></i> Hyderabad, TS</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 eventXpress Technologies. All rights reserved.</p>
+      <p>Designed with <i class="fa-solid fa-heart" style="color:var(--primary)"></i> for Event Planners</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // ================= AUTH CHECK =================
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      window.location.href = "login.html";
+    }
+
+    // ================= ELEMENTS =================
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const previewGrid = document.getElementById('image-preview-grid');
+    const serviceForm = document.getElementById('service-form');
+    const servicesList = document.getElementById('my-services');
+
+    let uploadedImages = [];
+
+    // ================= FILE UPLOAD =================
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--primary)';
+      dropZone.style.background = 'rgba(255, 213, 111, 0.1)';
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--border)';
+      dropZone.style.background = 'var(--bg)';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--border)';
+      dropZone.style.background = 'var(--bg)';
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        // Keep file references for FormData
+        uploadedImages.push({ file: file, src: URL.createObjectURL(file) });
+        renderPreviews();
+      });
+    }
+
+    function renderPreviews() {
+      previewGrid.innerHTML = '';
+      uploadedImages.forEach((imgObj, index) => {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `
+          <img src="${imgObj.src}">
+          <button type="button" onclick="window.removeImage(${index})">✕</button>
+        `;
+        previewGrid.appendChild(div);
+      });
+    }
+
+    // Make globally accessible for onclick
+    window.removeImage = function(index) {
+      uploadedImages.splice(index, 1);
+      renderPreviews();
+    };
+
+    // ================= ADD SERVICE =================
+    serviceForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("serviceName").value;
+      const price = document.getElementById("price").value;
+      const description = document.getElementById("description").value;
+      const category = document.getElementById("category").value;
+      const contact = document.getElementById("contact").value;
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("category", category);
+      formData.append("contact", contact);
+
+      // Append image files to formData
+      uploadedImages.forEach(imgObj => {
+        formData.append("images", imgObj.file);
+      });
+
+      try {
+        const res = await fetch("http://localhost:5000/api/vendor/products", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token
+            // Content-Type should NOT be set manually when sending FormData
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok) { alert(data.msg); return; }
+
+        alert("Service added!");
+        serviceForm.reset();
+        uploadedImages = [];
+        renderPreviews();
+        loadServices();
+
+      } catch (err) {
+        console.error(err);
+        alert("Error adding service");
+      }
+    });
+
+    // Sanitize user inputs to prevent XSS
+    const escapeHTML = (str) => {
+      const p = document.createElement("p");
+      p.appendChild(document.createTextNode(str));
+      return p.innerHTML;
+    };
+
+    // ================= LOAD SERVICES (MY products only) =================
+    async function loadServices() {
+      try {
+        const res = await fetch("http://localhost:5000/api/vendor/my-products", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+
+        const services = await res.json();
+        servicesList.innerHTML = "";
+
+        if (!services || services.length === 0) {
+          servicesList.innerHTML = "<p>No services yet. Add your first listing above!</p>";
+          return;
+        }
+
+        services.forEach(service => {
+          const card = document.createElement("div");
+          card.className = "premium-card";
+
+          const imgSrc = (service.images && service.images.length > 0) ? service.images[0] : "https://via.placeholder.com/300x200?text=No+Image";
+          const categoryLabel = (service.category && service.category !== "Uncategorized") ? service.category.charAt(0).toUpperCase() + service.category.slice(1) : "";
+          
+          const safeDescription = escapeHTML(service.description);
+          const safeName = escapeHTML(service.name);
+
+          card.innerHTML = `
+            <div class="premium-img-wrapper">
+                ${categoryLabel ? `<span class="premium-badge">${categoryLabel}</span>` : ""}
+                <img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Unavailable'" alt="${safeName}">
+            </div>
+            <div class="premium-content">
+                <h3 class="premium-title">${safeName}</h3>
+                <p class="premium-desc">${safeDescription}</p>
+                ${service.contact ? `<p class="premium-vendor" style="color: var(--text-light);"><i class="fa-solid fa-phone"></i> ${escapeHTML(service.contact)}</p>` : ''}
+                <div class="premium-footer">
+                    <span class="premium-price">₹${service.price} <span>base</span></span>
+                    <button onclick="window.deleteService('${service._id}')" class="premium-btn premium-btn-danger">
+                        <i class="fa-solid fa-trash-can"></i> Delete
+                    </button>
+                </div>
+            </div>
+          `;
+          servicesList.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ================= DELETE SERVICE (global) =================
+    window.deleteService = async function(id) {
+      if (!confirm("Are you sure you want to delete this listing?")) return;
+      try {
+        const res = await fetch("http://localhost:5000/api/vendor/products/" + id, {
+          method: "DELETE",
+          headers: { "Authorization": "Bearer " + token }
+        });
+        if (res.ok) {
+          loadServices();
+        } else {
+          const data = await res.json();
+          alert(data.msg || "Error deleting service");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error");
+      }
+    };
+
+    // ================= INIT =================
+    loadServices();
+  </script>
+
+</body>
+
+</html>

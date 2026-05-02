@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eventXpress | Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oleo+Script+Swash+Caps&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+    <div class="auth-card" id="authCard">
+        <div class="text-center">
+            <div class="logo">eventXpress</div>
+            <h4 id="form-title">Join as a Customer</h4>
+        </div>
+
+        <div class="role-switcher">
+            <button class="role-btn active" id="customerBtn">Customer</button>
+            <button class="role-btn" id="vendorBtn">Vendor</button>
+        </div>
+
+        <div class="divider">OR USE EMAIL</div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label id="name-label">Full Name</label>
+                <input type="text" id="username" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="name@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Create a strong password" required>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+        </form>
+
+        <p class="terms">
+            By signing up, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b>.
+        </p>
+
+        <div class="footer-text">
+            Already have an account? <a href="login.html">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        const customerBtn = document.getElementById('customerBtn');
+        const vendorBtn = document.getElementById('vendorBtn');
+        const authCard = document.getElementById('authCard');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submitBtn');
+        const signupForm = document.getElementById('signupForm');
+        const nameLabel = document.getElementById('name-label');
+
+        let currentRole = 'customer';
+
+        // Toggle to Vendor
+        vendorBtn.addEventListener('click', () => {
+            currentRole = 'vendor';
+            vendorBtn.classList.add('active');
+            customerBtn.classList.remove('active');
+            authCard.classList.add('vendor-mode');
+            
+            // UI Feedback
+            formTitle.innerText = "Partner as a Vendor";
+            nameLabel.innerText = "Business Name";
+            submitBtn.innerText = "Register Business";
+        });
+
+        // Toggle to Customer
+        customerBtn.addEventListener('click', () => {
+            currentRole = 'customer';
+            customerBtn.classList.add('active');
+            vendorBtn.classList.remove('active');
+            authCard.classList.remove('vendor-mode');
+            
+            // UI Feedback
+            formTitle.innerText = "Join as a Customer";
+            nameLabel.innerText = "Full Name";
+            submitBtn.innerText = "Create Account";
+        });
+        
+        signupForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+
+          const userData = {
+            name: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            role: currentRole.toLowerCase()
+          };
+
+          try {
+            submitBtn.innerText = "Processing...";
+            submitBtn.disabled = true;
+
+            const res = await fetch("http://localhost:5000/api/auth/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(userData)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              alert("Registered successfully!");
+              window.location.href = "login.html";
+            } else {
+              alert(data.msg);
+            }
+
+          } catch (err) {
+            console.error(err);
+            alert("Network Error: Make sure your Node backend (server.js) AND MongoDB are running!");
+          } finally {
+            submitBtn.innerText = currentRole === "vendor" ? "Register Business" : "Create Account";
+            submitBtn.disabled = false;
+          }
+        });
+    </script>
+</body>
+</html>

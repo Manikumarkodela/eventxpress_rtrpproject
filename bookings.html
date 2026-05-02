@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings | eventXpress</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oleo+Script+Swash+Caps&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a39f2ce48a.js" crossorigin="anonymous"></script>
+    <style>
+        .bookings-container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+        .dashboard-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .dashboard-header p { color: var(--text-light); }
+        .booking-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: var(--transition);
+        }
+        .booking-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(255,204,77,0.1);
+        }
+        .booking-info { flex: 1; margin-left: 1.5rem; }
+        .booking-info h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; }
+        .booking-info p { margin: 0; color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-badge.pending { background: #fef9c3; color: #854d0e; }
+        .price-badge { font-weight: 600; color: var(--primary); font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" aria-label="Primary navigation">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="logo">eventXpress</a>
+            </div>
+            <div class="nav-center" id="navCenter">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <button type="button" class="dropdown-toggle" aria-expanded="false">
+                            Services
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="vendors.html?search=photographers">Photographers</a></li>
+                            <li><a href="vendors.html?search=caterers">Caterers</a></li>
+                            <li><a href="vendors.html?search=decorators">Decorators</a></li>
+                            <li><a href="vendors.html?search=venues">Venues</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <button type="button" class="dropdown-toggle" aria-expanded="false">
+                            Categories
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="vendors.html?category=planning">Wedding Planning</a></li>
+                            <li><a href="vendors.html?category=birthday">Birthday Events</a></li>
+                            <li><a href="vendors.html?category=corporate">Corporate Events</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <button type="button" class="dropdown-toggle" aria-expanded="false">
+                            Locations
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="vendors.html?location=hyderabad">Hyderabad</a></li>
+                            <li><a href="vendors.html?location=warangal">Warangal</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#blog">Blog</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <div class="search-box" role="search">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input type="text" placeholder="Search services..." aria-label="Search services">
+                </div>
+                <div id="auth-buttons">
+                    <button class="btn-primary login-btn" onclick="window.location.href='login.html'">Login</button>
+                </div>
+               
+                <div id="user-menu" class="user-menu" aria-haspopup="true" style="display: none;">
+                    <button id="user-trigger" class="user-trigger" aria-expanded="false">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span id="user-name">User</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div id="user-dropdown" class="user-dropdown">
+                    </div>
+                </div>
+
+                <!-- MENU TOGGLE -->
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="bookings-container">
+            <div class="dashboard-header">
+                <h1>My Bookings</h1>
+                <p>Track and manage your upcoming event services.</p>
+            </div>
+            
+            <div id="bookingsList">
+                <p style="text-align: center; color: var(--text-light); padding: 2rem;">Loading your bookings...</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <a href="#" class="logo">eventXpress</a>
+                <p>Simplifying the massive chaos of event planning by instantly bridging the gap between top professionals and ready customers.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="vendors.html">Vendor Marketplace</a></li>
+                    <li><a href="index.html#blog">Blog &amp; Insights</a></li>
+                    <li><a href="index.html#events">Popular Events</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Safety Center</a></li>
+                    <li><a href="#">Cancellation Policy</a></li>
+                    <li><a href="vendor-dashboard.html">Vendor Tools</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="mailto:hello@eventxpress.com"><i class="fa-regular fa-envelope"></i> hello@eventxpress.com</a></li>
+                    <li><a href="#"><i class="fa-solid fa-phone"></i> +91 98765 43210</a></li>
+                    <li><a href="#"><i class="fa-solid fa-location-dot"></i> Hyderabad, TS</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 eventXpress Technologies. All rights reserved.</p>
+            <p>Designed with <i class="fa-solid fa-heart" style="color:var(--primary)"></i> for Event Planners</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const token = localStorage.getItem("token");
+            if(!token) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const bookingsList = document.getElementById('bookingsList');
+
+            try {
+                const res = await fetch("http://localhost:5000/api/order", {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                if (!res.ok) {
+                    // If no GET endpoint yet, show a friendly message
+                    bookingsList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+                            <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                            <h3 style="margin-bottom: 0.5rem;">No bookings yet</h3>
+                            <p>When you book a service, it will appear here.</p>
+                            <a href="vendors.html" class="btn-primary" style="display: inline-block; margin-top: 1rem; padding: 10px 24px;">Browse Services</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const orders = await res.json();
+
+                if (!orders || orders.length === 0) {
+                    bookingsList.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+                            <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                            <h3 style="margin-bottom: 0.5rem;">No bookings yet</h3>
+                            <p>When you book a service, it will appear here.</p>
+                            <a href="vendors.html" class="btn-primary" style="display: inline-block; margin-top: 1rem; padding: 10px 24px;">Browse Services</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                bookingsList.innerHTML = "";
+                orders.forEach(order => {
+                    const totalPrice = order.products.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+                    const productNames = order.products.map(p => p.name).join(", ");
+                    const date = new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                    bookingsList.innerHTML += `
+                        <div class="booking-card">
+                            <div class="booking-info">
+                                <h3>${productNames}</h3>
+                                <p>Booked on: ${date}</p>
+                                <br>
+                                <span class="status-badge">Confirmed</span>
+                            </div>
+                            <div>
+                                <span class="price-badge">₹${totalPrice}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (err) {
+                bookingsList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+                        <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                        <h3 style="margin-bottom: 0.5rem;">No bookings yet</h3>
+                        <p>When you book a service, it will appear here.</p>
+                        <a href="vendors.html" class="btn-primary" style="display: inline-block; margin-top: 1rem; padding: 10px 24px;">Browse Services</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
