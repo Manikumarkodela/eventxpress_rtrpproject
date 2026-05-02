@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
+import toast from 'react-hot-toast';
 import API_BASE from '../config';
 
 const VendorDashboard = () => {
@@ -83,7 +84,7 @@ const VendorDashboard = () => {
       });
 
       if (res.ok) {
-        alert("Service added!");
+        toast.success("Service published successfully!");
         setFormData({
           name: '', price: '', description: '', category: 'photography', location: 'Hyderabad', contact: ''
         });
@@ -91,31 +92,52 @@ const VendorDashboard = () => {
         loadServices();
       } else {
         const errData = await res.json();
-        alert(errData.msg || "Error adding service");
+        toast.error(errData.msg || "Error adding service");
       }
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 
   const deleteService = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this listing?")) return;
-    const token = localStorage.getItem('token');
-    try {
-      const res = await fetch(`${API_BASE}/vendor/products/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": "Bearer " + token }
-      });
-      if (res.ok) {
-        loadServices();
-      } else {
-        const data = await res.json();
-        alert(data.msg || "Error deleting service");
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    toast((t) => (
+      <div>
+        <p style={{ margin: '0 0 10px', fontWeight: 600 }}>Delete this listing?</p>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              const token = localStorage.getItem('token');
+              try {
+                const res = await fetch(`${API_BASE}/vendor/products/${id}`, {
+                  method: "DELETE",
+                  headers: { "Authorization": "Bearer " + token }
+                });
+                if (res.ok) {
+                  toast.success("Service deleted");
+                  loadServices();
+                } else {
+                  const data = await res.json();
+                  toast.error(data.msg || "Error deleting service");
+                }
+              } catch (err) {
+                toast.error("Network error");
+              }
+            }}
+            style={{ background: '#ef4444', color: 'white', padding: '5px 10px', border: 'none', borderRadius: 5, cursor: 'pointer' }}
+          >
+            Yes, Delete
+          </button>
+          <button 
+            onClick={() => toast.dismiss(t.id)}
+            style={{ background: '#e2e8f0', color: 'black', padding: '5px 10px', border: 'none', borderRadius: 5, cursor: 'pointer' }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), { duration: 5000 });
   };
 
   return (

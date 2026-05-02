@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Profile = () => {
   const [user, setUser] = useState({ name: '', role: '', initial: '' });
@@ -67,7 +68,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <button className="btn-primary" onClick={() => alert('Profile Editor coming soon!')} style={{ padding: '12px 30px', fontSize: '1rem' }}>
+        <button className="btn-primary" onClick={() => toast('Profile Editor coming soon!', { icon: '🚧' })} style={{ padding: '12px 30px', fontSize: '1rem' }}>
           <i className="fa-solid fa-pen"></i> Edit Profile
         </button>
       </div>

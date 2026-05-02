@@ -28,4 +28,23 @@ const getMyOrders = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getMyOrders };
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ msg: "Order not found" });
+    }
+
+    if (order.customerId.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+
+    await order.deleteOne();
+    res.json({ msg: "Booking cancelled successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { createOrder, getMyOrders, cancelOrder };

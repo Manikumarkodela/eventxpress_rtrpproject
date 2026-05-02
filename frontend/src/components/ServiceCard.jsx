@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import API_BASE from '../config';
 
 const ServiceCard = ({ service, isVendorView, onDelete }) => {
@@ -7,7 +8,7 @@ const ServiceCard = ({ service, isVendorView, onDelete }) => {
   const handleBook = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login to book a service!");
+      toast.error("Please login to book a service!");
       navigate('/login');
       return;
     }
@@ -32,13 +33,13 @@ const ServiceCard = ({ service, isVendorView, onDelete }) => {
 
       const data = await res.json();
       if (res.ok) {
-        alert(`🎉 Successfully booked ${service.name}!`);
+        toast.success(`🎉 Successfully booked ${service.name}!`);
       } else {
-        alert(data.msg || "Failed to book service");
+        toast.error(data.msg || "Failed to book service");
       }
     } catch (err) {
       console.error("Booking error:", err);
-      alert("Network error. Make sure your backend is running!");
+      toast.error("Network error. Make sure your backend is running!");
     }
   };
 

@@ -68,20 +68,24 @@ const Navbar = () => {
           <Link to="/" className="logo">eventXpress</Link>
         </div>
         
-        <div className={`nav-center ${isOpen ? 'active' : ''}`} id="navCenter">
-          <ul className="nav-links" id="navLinks">
-            <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
-            <li><a href="/#events" onClick={() => setIsOpen(false)}>Categories</a></li>
-            <li><a href="/#vendors" onClick={() => setIsOpen(false)}>Services</a></li>
-            <li><a href="/#blog" onClick={() => setIsOpen(false)}>Blog</a></li>
-          </ul>
-        </div>
+        {(!user || user.role !== 'vendor') && (
+          <div className={`nav-center ${isOpen ? 'active' : ''}`} id="navCenter">
+            <ul className="nav-links" id="navLinks">
+              <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
+              <li><a href="/#events" onClick={() => setIsOpen(false)}>Categories</a></li>
+              <li><a href="/#vendors" onClick={() => setIsOpen(false)}>Services</a></li>
+              <li><a href="/#blog" onClick={() => setIsOpen(false)}>Blog</a></li>
+            </ul>
+          </div>
+        )}
 
         <div className="nav-right">
-          <div className="search-box" role="search">
-            <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <input type="text" placeholder="Search services..." aria-label="Search services" />
-          </div>
+          {(!user || user.role !== 'vendor') && (
+            <div className="search-box" role="search">
+              <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="text" placeholder="Search services..." aria-label="Search services" />
+            </div>
+          )}
 
           {!user ? (
             <div id="auth-buttons">
@@ -113,6 +117,9 @@ const Navbar = () => {
                     <>
                       <Link to="/vendor-dashboard" onClick={() => setIsUserMenuOpen(false)}>
                         <i className="fa-solid fa-chart-line"></i> Dashboard
+                      </Link>
+                      <Link to="/profile" onClick={() => setIsUserMenuOpen(false)}>
+                        <i className="fa-solid fa-user"></i> Profile
                       </Link>
                     </>
                   ) : (

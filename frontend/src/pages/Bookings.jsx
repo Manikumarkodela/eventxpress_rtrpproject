@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import API_BASE from '../config';
 
 const Bookings = () => {
@@ -31,9 +32,50 @@ const Bookings = () => {
       }
     } catch (err) {
       console.error('Failed to fetch bookings:', err);
+      toast.error("Failed to load bookings");
     } finally {
       setLoading(false);
     }
+  };
+
+  const cancelBooking = async (id) => {
+    toast((t) => (
+      <div>
+        <p style={{ margin: '0 0 10px', fontWeight: 600 }}>Cancel this booking?</p>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              const token = localStorage.getItem('token');
+              try {
+                const res = await fetch(`${API_BASE}/order/${id}`, {
+                  method: 'DELETE',
+                  headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                  toast.success("Booking cancelled");
+                  fetchOrders(token);
+                } else {
+                  const data = await res.json();
+                  toast.error(data.msg || "Failed to cancel");
+                }
+              } catch (err) {
+                toast.error("Network error");
+              }
+            }}
+            style={{ background: '#ef4444', color: 'white', padding: '5px 10px', border: 'none', borderRadius: 5, cursor: 'pointer' }}
+          >
+            Yes, Cancel
+          </button>
+          <button 
+            onClick={() => toast.dismiss(t.id)}
+            style={{ background: '#e2e8f0', color: 'black', padding: '5px 10px', border: 'none', borderRadius: 5, cursor: 'pointer' }}
+          >
+            No, Keep it
+          </button>
+        </div>
+      </div>
+    ), { duration: 5000 });
   };
 
   const totalSpent = orders.reduce((sum, order) => {
@@ -159,12 +201,20 @@ const Bookings = () => {
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 padding: '1rem 1.5rem', background: '#fffbeb', borderTop: '1px solid #fde68a'
               }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
-                  <i className="fa-regular fa-clock"></i>{' '}
-                  {new Date(order.createdAt).toLocaleDateString('en-IN', { 
-                    day: 'numeric', month: 'short', year: 'numeric' 
-                  })}
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                    <i className="fa-regular fa-clock"></i>{' '}
+                    {new Date(order.createdAt).toLocaleDateString('en-IN', { 
+                      day: 'numeric', month: 'short', year: 'numeric' 
+                    })}
+                  </span>
+                  <button 
+                    onClick={() => cancelBooking(order._id)}
+                    style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', padding: 0, textAlign: 'left', fontWeight: 600 }}
+                  >
+                    Cancel Booking
+                  </button>
+                </div>
                 <span style={{ fontWeight: 700, fontSize: '1.15rem' }}>
                   Total: ₹{order.products.reduce((s, p) => s + p.price * p.quantity, 0).toLocaleString()}
                 </span>

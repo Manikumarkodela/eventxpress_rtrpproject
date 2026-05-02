@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import API_BASE from '../config';
 
 const Signup = () => {
@@ -15,12 +16,12 @@ const Signup = () => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      toast.error("Passwords don't match!");
       return;
     }
 
     if (password.length < 6) {
-      alert("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -36,16 +37,16 @@ const Signup = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.msg || "Registration failed");
+        toast.error(data.msg || "Registration failed");
         setIsLoading(false);
         return;
       }
 
-      alert("🎉 Account created successfully! Please login.");
+      toast.success("🎉 Account created successfully! Please login.");
       navigate('/login');
     } catch (err) {
       console.error(err);
-      alert("Server error. Please try again.");
+      toast.error("Server error. Please try again.");
       setIsLoading(false);
     }
   };

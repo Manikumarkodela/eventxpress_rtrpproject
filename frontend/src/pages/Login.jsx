@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import API_BASE from '../config';
 
 const Login = () => {
@@ -23,7 +24,7 @@ const Login = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.msg || "Login failed");
+        toast.error(data.msg || "Login failed");
         setIsLoading(false);
         return;
       }
@@ -35,7 +36,7 @@ const Login = () => {
       try {
         payload = JSON.parse(atob(data.token.split('.')[1]));
       } catch {
-        alert("Invalid token received");
+        toast.error("Invalid token received");
         setIsLoading(false);
         return;
       }
@@ -43,7 +44,7 @@ const Login = () => {
       const actualRole = payload.user ? payload.user.role : payload.role;
 
       if (actualRole !== role) {
-        alert(`Access Denied: This account is registered as a ${actualRole}. Please select the correct role or create a new account.`);
+        toast.error(`Access Denied: This account is registered as a ${actualRole}. Please select the correct role.`);
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
         setIsLoading(false);
@@ -53,7 +54,7 @@ const Login = () => {
       window.location.href = actualRole === "vendor" ? "/vendor-dashboard" : "/";
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      toast.error("Server error");
       setIsLoading(false);
     }
   };
