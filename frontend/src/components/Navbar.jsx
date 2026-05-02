@@ -23,7 +23,8 @@ const Navbar = () => {
           setUser(null);
           return;
         }
-        setUser({ name: userName, role: payload.role });
+        const actualRole = payload.user ? payload.user.role : payload.role;
+        setUser({ name: userName, role: actualRole });
       } catch (e) {
         localStorage.removeItem('token');
         localStorage.removeItem('userName');

@@ -14,10 +14,11 @@ const Profile = () => {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+      const actualRole = payload.user ? payload.user.role : payload.role;
       const userName = localStorage.getItem('userName') || 'User';
       setUser({
         name: userName,
-        role: payload.role === 'vendor' ? 'Vendor Partner' : 'Customer Account',
+        role: actualRole === 'vendor' ? 'Vendor Partner' : 'Customer Account',
         initial: userName.charAt(0).toUpperCase()
       });
     } catch (e) {

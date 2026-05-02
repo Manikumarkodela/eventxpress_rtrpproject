@@ -40,13 +40,17 @@ const Login = () => {
         return;
       }
 
-      if (payload.role !== role) {
-        alert(`You logged in as ${payload.role}, but selected ${role}`);
+      const actualRole = payload.user ? payload.user.role : payload.role;
+
+      if (actualRole !== role) {
+        alert(`Access Denied: This account is registered as a ${actualRole}. Please select the correct role or create a new account.`);
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        setIsLoading(false);
+        return;
       }
 
-      // Instead of forcing a hard reload, we can use navigate and trigger a state update
-      // or simply rely on window.location to force a full re-render of Navbar state
-      window.location.href = payload.role === "vendor" ? "/vendor-dashboard" : "/";
+      window.location.href = actualRole === "vendor" ? "/vendor-dashboard" : "/";
     } catch (err) {
       console.error(err);
       alert("Server error");
